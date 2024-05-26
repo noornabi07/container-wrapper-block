@@ -1,0 +1,305 @@
+import { PanelBody, PanelRow, RangeControl, ToggleControl } from '@wordpress/components';
+import React from 'react';
+import { __ } from '@wordpress/i18n';
+import { Fragment, useState } from '@wordpress/element';
+import { BDevice, Label, Background, BorderControl } from '../../../../../Components';
+import { SelectControl } from '@wordpress/components';
+import { BBoxControl } from '../../Panel/BBoxControl/BBoxControl';
+import { updateData } from '../../../utils/functions';
+import { produce } from 'immer';
+
+
+const StyleSetting = ({ attributes, setAttributes }) => {
+  const { marginColumns, paddingColumns, background, isOverly, overlyBackground, blendType, isFilterCss, border, actionStyleButton, overlyStyleButton, borderStyleButton } = attributes;
+
+  const [device, setDevice] = useState('desktop');
+  const { normalBg, hoverBg, transition } = background;
+  const { oNormalBg, oHoverBg, normalOpacity, hoverOpacity, hoverTransition } = overlyBackground;
+
+
+  return (
+    <Fragment>
+      {/* Margin setting */}
+      <PanelBody>
+        <div>
+          <PanelRow>
+            <Label className='mb5'>{__('Margin:', 'text-domain')}</Label>
+            <BDevice device={device} onChange={val => setDevice(val)} />
+          </PanelRow>
+          <BBoxControl values={marginColumns.margin[device]} onChange={val => setAttributes({ marginColumns: updateData(marginColumns, val, "margin", device) })}></BBoxControl>
+        </div>
+
+        {/* Padding setting */}
+        <div>
+          <PanelRow>
+            <Label className='mb5'>{__('Padding:', 'text-domain')}</Label>
+            <BDevice device={device} onChange={val => setDevice(val)} />
+          </PanelRow>
+          <BBoxControl values={paddingColumns.padding[device]} onChange={val => setAttributes({ paddingColumns: updateData(paddingColumns, val, "padding", device) })} ></BBoxControl>
+        </div>
+      </PanelBody>
+
+      {/* Background settings  */}
+      <PanelBody title={__("Background", "container-block")} initialOpen={false}>
+        <div style={{ marginTop: "10px" }}>
+          <div className='shaped-types'>
+            {
+              ["normal", "hover"].map((val, i) => <button className={`${actionStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ actionStyleButton: val })} key={i}>{val}</button>)
+            }
+          </div>
+        </div>
+
+        {
+          actionStyleButton === "normal" ? <>
+            {/* Background */}
+            <Background label={__('Background Color', 'container-block')} value={normalBg} onChange={val => {
+              const newBg = produce(background, draft => {
+                draft.normalBg = val
+              })
+              setAttributes({ background: newBg })
+            }} defaults={{ color: '#fff' }} />
+
+            {/* ToggleControl */}
+            <div style={{ marginTop: "10px" }}>
+              <ToggleControl
+                label="Enable Overly"
+                checked={isOverly}
+                onChange={() => setAttributes({ isOverly: !isOverly })}
+              >
+              </ToggleControl>
+              {
+                isOverly === true ? <>
+                  <div style={{ marginTop: "10px" }}>
+                    <div className='shaped-types'>
+                      {
+                        ["normal", "hover"].map((val, i) => <button className={`${overlyStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ overlyStyleButton: val })} key={i}>{val}</button>)
+                      }
+                    </div>
+                  </div>
+
+                  {/* background */}
+                  <Background label={__('Overly Color', 'container-block')} value={oNormalBg} onChange={val => {
+                    const newBg = produce(overlyBackground, draft => {
+                      draft.oNormalBg = val
+                    })
+                    setAttributes({ overlyBackground: newBg })
+                  }} defaults={{ color: '#fff' }} />
+
+                  {/* Opacity */}
+                  <RangeControl
+                    label="Opacity"
+                    value={normalOpacity}
+                    onChange={val => {
+                      const newOpacity = produce(overlyBackground, draft => {
+                        draft.normalOpacity = val
+                      })
+                      setAttributes({ overlyBackground: newOpacity })
+                    }}
+                    step={0.1}
+                  ></RangeControl>
+
+                  <SelectControl
+                    label={__("Blend Mode", "container-block")}
+                    value={blendType}
+                    options={[
+                      { value: 'normal', label: 'Normal' },
+                      { value: 'multiply', label: 'Multiply' },
+                      { value: 'screen', label: 'Screen' },
+                      { value: 'overly', label: 'Overly' },
+                      { value: 'darken', label: 'Darken' },
+                      { value: 'lighten', label: 'Lighten' },
+                      { value: 'color dodge', label: 'Color Dodge' },
+                      { value: 'saturation', label: 'Saturation' },
+                      { value: 'color', label: 'Color' },
+                      { value: 'luminosity', label: 'Luminosity' }
+                    ]}
+                    onChange={(val) => {
+                      setAttributes({ blendType: val })
+                    }}
+                  >
+                  </SelectControl>
+
+                  <ToggleControl
+                    label="CSS Filters"
+                    checked={isFilterCss}
+                    onChange={() => setAttributes({ isFilterCss: !isFilterCss })}
+                  >
+                  </ToggleControl>
+
+                </> : ""
+              }
+            </div></> :
+            <>
+              {/* Hover Background */}
+              <Background label={__('Hover Background Color', 'container-block')} value={hoverBg} onChange={val => {
+                const newBg = produce(background, draft => {
+                  draft.hoverBg = val
+                })
+                setAttributes({ background: newBg })
+              }} defaults={{ color: '#fff' }} />
+
+              {/* Background Transition */}
+              <div style={{ marginTop: "10px" }}>
+                <p style={{ marginBottom: "0px" }}>Background Transition</p>
+                <RangeControl
+                  value={transition}
+                  onChange={val => {
+                    const newTransition = produce(background, draft => {
+                      draft.transition = val
+                    })
+                    setAttributes({ background: newTransition })
+                  }}
+                  step={0.5}
+                ></RangeControl>
+              </div>
+
+              {/* ToggleControl */}
+              <div style={{ marginTop: "10px" }}>
+                <ToggleControl
+                  label="Enable Overly"
+                  checked={isOverly}
+                  onChange={() => setAttributes({ isOverly: !isOverly })}
+                >
+                </ToggleControl>
+                {
+                  isOverly === true ?
+                    <>
+                      <div style={{ marginTop: "10px" }}>
+                        <div className='shaped-types'>
+                          {
+                            ["normal", "hover"].map((val, i) => <button className={`${overlyStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ overlyStyleButton: val })} key={i}>{val}</button>)
+                          }
+                        </div>
+                      </div>
+
+                      {
+                        overlyStyleButton === "normal" ? <>{/* Overly background */}
+                          <Background label={__('Overly Color', 'container-block')} value={oHoverBg} onChange={val => {
+                            const newBg = produce(overlyBackground, draft => {
+                              draft.oHoverBg = val
+                            })
+                            setAttributes({ overlyBackground: newBg })
+                          }} defaults={{ color: '#000' }} />
+
+                          {/* Opacity */}
+                          <RangeControl
+                            label="Opacity"
+                            value={hoverOpacity}
+                            onChange={val => {
+                              const newOpacity = produce(overlyBackground, draft => {
+                                draft.hoverOpacity = val
+                              })
+                              setAttributes({ overlyBackground: newOpacity })
+                            }}
+                            step={0.1}
+                          ></RangeControl>
+
+                          <SelectControl
+                            label={__("Blend Mode", "container-block")}
+                            value={blendType}
+                            options={[
+                              { value: 'normal', label: 'Normal' },
+                              { value: 'multiply', label: 'Multiply' },
+                              { value: 'screen', label: 'Screen' },
+                              { value: 'overly', label: 'Overly' },
+                              { value: 'darken', label: 'Darken' },
+                              { value: 'lighten', label: 'Lighten' },
+                              { value: 'color dodge', label: 'Color Dodge' },
+                              { value: 'saturation', label: 'Saturation' },
+                              { value: 'color', label: 'Color' },
+                              { value: 'luminosity', label: 'Luminosity' }
+                            ]}
+                            onChange={(val) => {
+                              setAttributes({ blendType: val })
+                            }}
+                          >
+                          </SelectControl></> : <>{/* Overly background */}
+                          <Background label={__('Overly Color', 'container-block')} value={oHoverBg} onChange={val => {
+                            const newBg = produce(overlyBackground, draft => {
+                              draft.oHoverBg = val
+                            })
+                            setAttributes({ overlyBackground: newBg })
+                          }} defaults={{ color: '#000' }} />
+
+                          {/* Opacity */}
+                          <RangeControl
+                            label="Opacity"
+                            value={hoverOpacity}
+                            onChange={val => {
+                              const newOpacity = produce(overlyBackground, draft => {
+                                draft.hoverOpacity = val
+                              })
+                              setAttributes({ overlyBackground: newOpacity })
+                            }}
+                            step={0.1}
+                          ></RangeControl>
+
+                          {/* Transition */}
+                          <RangeControl
+                            label="Opacity Transition"
+                            value={hoverTransition}
+                            onChange={val => {
+                              const newOpacity = produce(overlyBackground, draft => {
+                                draft.hoverTransition = val
+                              })
+                              setAttributes({ overlyBackground: newOpacity })
+                            }}
+                            step={0.1}
+                          ></RangeControl>
+
+
+                          <SelectControl
+                            label={__("Blend Mode", "container-block")}
+                            value={blendType}
+                            options={[
+                              { value: 'normal', label: 'Normal' },
+                              { value: 'multiply', label: 'Multiply' },
+                              { value: 'screen', label: 'Screen' },
+                              { value: 'overly', label: 'Overly' },
+                              { value: 'darken', label: 'Darken' },
+                              { value: 'lighten', label: 'Lighten' },
+                              { value: 'color dodge', label: 'Color Dodge' },
+                              { value: 'saturation', label: 'Saturation' },
+                              { value: 'color', label: 'Color' },
+                              { value: 'luminosity', label: 'Luminosity' }
+                            ]}
+                            onChange={(val) => {
+                              setAttributes({ blendType: val })
+                            }}
+                          >
+                          </SelectControl></>
+                      }
+
+                      <ToggleControl
+                        label="CSS Filters"
+                        checked={isFilterCss}
+                        onChange={() => setAttributes({ isFilterCss: !isFilterCss })}
+                      >
+                      </ToggleControl>
+
+                    </> : ""
+                }
+              </div></>
+        }
+
+      </PanelBody>
+
+
+      {/* Border and Shadow panel settings */}
+      <PanelBody title={__("Border & Shadow", "container-block")} initialOpen={false}>
+        <div style={{ marginTop: "10px" }}>
+          <div className='shaped-types'>
+            {
+              ["normal", "hover"].map((value, i) => <button className={`${borderStyleButton === value && "shapedActive"}`} onClick={() => setAttributes({ borderStyleButton: value })} key={i}>{value}</button>)
+            }
+          </div>
+        </div>
+
+        {/* Border Control */}
+        <BorderControl label={__('Border:', 'text-domain')} value={border} onChange={val => setAttributes({ border: val })} defaults={{ radius: '5px' }} />
+      </PanelBody>
+    </Fragment>
+  );
+};
+
+export default StyleSetting;

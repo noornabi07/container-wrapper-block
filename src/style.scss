@@ -1,0 +1,59 @@
+$primaryColor: #4527a4;
+
+// Common CSS
+html {
+  scroll-behavior: smooth;
+}
+
+// Dashicon
+.dashicons {
+  font-family: dashicons !important;
+}
+
+.mainDiv {
+  box-sizing: border-box;
+  width: 100%;
+  position: relative;
+}
+.top-shaped svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.bottom-shaped svg {
+  position: absolute;
+  top: 5px;
+  transform-origin: center;
+  left: 0;
+  transform: rotate(180deg);
+}
+
+.innerBlock {
+  position: absolute;
+}
+
+// Block Name
+.wp-block-prefix-block-name {
+  * {
+    box-sizing: border-box;
+  }
+
+  .prefixBlockName {
+    display: inline-block;
+  }
+
+  .icon {
+    font-style: inherit;
+  }
+
+  img {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+// @media only screen and (max-width:767px) {
+// 	width:${column.width.mobile}px
+// }
+
+// block-22c6f87f-b578-4657-8a4f-939f1e486180
