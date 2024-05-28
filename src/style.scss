@@ -19,17 +19,19 @@ html {
   position: absolute;
   top: 0;
   left: 0;
+  
 }
 .bottom-shaped svg {
   position: absolute;
-  top: 5px;
-  transform-origin: center;
   left: 0;
-  transform: rotate(180deg);
+  bottom: 0;
 }
 
 .innerBlock {
   position: absolute;
+  height: 300px;
+  width: 100%;
+  
 }
 
 // Block Name
@@ -52,8 +54,3 @@ html {
   }
 }
 
-// @media only screen and (max-width:767px) {
-// 	width:${column.width.mobile}px
-// }
-
-// block-22c6f87f-b578-4657-8a4f-939f1e486180

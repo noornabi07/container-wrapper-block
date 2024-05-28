@@ -107,7 +107,7 @@ function container($attributes, $innerBlocks) {
 			<path
 				className="eb-shape-divider-fill"
 				d="m0 98.99 170.59-87.45S611.11 98.99 1000 98.99V0H0v98.99Z"
-				fill="currentColor"
+				fill="'.$bottomColors.'"
 			/>
 		</g>
 		<defs>

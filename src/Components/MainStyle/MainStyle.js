@@ -3,8 +3,7 @@ import { getBackgroundCSS, getBorderCSS } from '../../../../Components/utils/get
 import { getBoxCss } from '../../utils/functions';
 
 const MainStyle = ({ attributes }) => {
-  const { columns, cId, heightColumns, background, isHeight, contentAlign, marginColumns, paddingColumns, overlyBackground, isOverly, border, shapedColumns } = attributes;
-
+  const { columns, cId, heightColumns, background, isHeight, contentAlign, marginColumns, paddingColumns, overlyBackground, isOverly, border, shapedColumns, isTopFlip, isBottomFlip } = attributes;
 
   const { oNormalBg, oHoverBg, normalOpacity, hoverOpacity, hoverTransition } = overlyBackground;
 
@@ -18,6 +17,19 @@ const MainStyle = ({ attributes }) => {
   return (
     <style>
       {`
+        ${innerBlock}{
+          ${isHeight === true && `
+            ${contentAlign === "start" && `
+              top: 10%;
+            `};
+            ${contentAlign === "center" && `
+              top: 40%;
+            `};
+            ${contentAlign === "end" && `
+              top: 70%;
+            `}
+          `}
+        }
         ${innerBlock}::before{
           content: "";
           position: absolute;
@@ -49,8 +61,6 @@ const MainStyle = ({ attributes }) => {
           ${isHeight === true && `
             height: ${heightColumns.height.desktop};
             overflow: scroll;
-            display: flex;
-            align-items: ${contentAlign};
           `};
           ${getBackgroundCSS(background.normalBg)};
           ${isHeight === false && `
@@ -69,6 +79,9 @@ const MainStyle = ({ attributes }) => {
             display: flex;
             align-items: center;
           `}
+          ${isHeight === false && `
+            height: 80px;
+          `}
           }
         }
         @media only screen and (min-width: 641px) and (max-width: 1024px){
@@ -79,10 +92,14 @@ const MainStyle = ({ attributes }) => {
             display: flex;
             align-items: center;
           `}
+          ${isHeight === false && `
+            height: 80px;
+          `}
           }
         }
         ${mainDiv}{
-          width: ${columns.width.desktop};
+          height:inherit;
+          width: ${columns.width.desktop || "100%"};
           ${getBoxCss(marginColumns.margin.desktop, "margin")};
           ${getBoxCss(paddingColumns.padding.desktop, "padding")};
           ${getBorderCSS(border)};
@@ -90,6 +107,7 @@ const MainStyle = ({ attributes }) => {
         }   
         @media only screen and (max-width:640px){
           ${mainDiv}{
+          height:inherit;
           width: ${columns.width.mobile};
           ${getBoxCss(paddingColumns.padding.mobile, "padding")};
           ${getBoxCss(marginColumns.margin.mobile, "margin")};
@@ -97,6 +115,7 @@ const MainStyle = ({ attributes }) => {
       }
       @media only screen and (min-width:641px) and (max-width: 1024px){
         ${mainDiv}{
+          height:inherit;
           width: ${columns.width.tablet};
           ${getBoxCss(paddingColumns.padding.tablet, "padding")};
           ${getBoxCss(marginColumns.margin.tablet, "margin")};
@@ -106,6 +125,9 @@ const MainStyle = ({ attributes }) => {
       ${topShaped} svg{
         width: ${shapedColumns.topWidth.desktop};
         height: ${shapedColumns.topHeight.desktop};
+        ${isTopFlip === true && `
+          transform: translateX(0%) rotateY(180deg);
+        `}
       }
       @media only screen and (min-width:641px) and (max-width: 1024px){
         ${topShaped} svg{
@@ -123,6 +145,12 @@ const MainStyle = ({ attributes }) => {
       ${bottomShaped} svg{
         width: ${shapedColumns.bottomWidth.desktop};
         height: ${shapedColumns.bottomHeight.desktop};
+        ${isBottomFlip === true && `
+          transform: translateX(0%) rotateX(180deg);
+        `};
+        ${isBottomFlip === false && `
+          transform: rotate(180deg);
+        `}
       }
       @media only screen and (min-width:641px) and (max-width: 1024px){
         ${bottomShaped} svg{

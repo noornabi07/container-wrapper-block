@@ -16,7 +16,6 @@ const ContentSettings = ({ attributes, setAttributes }) => {
 
   const { topColors, bottomColors } = shaped;
 
-
   const [device, setDevice] = useState('desktop');
   const { topShaped, bottomShaped } = shaped;
 
@@ -175,7 +174,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
                 })
               })} defaultColor='#006769' />
 
-              {/* top shaped width setting */}
+              {/* bottom shaped width setting */}
               <div style={{ marginTop: '10px', marginBottom: '20px' }}>
                 <PanelRow>
                   <Label className='mb5'>{__('Bottom Shaped Width:', 'container-block')}</Label>
@@ -184,7 +183,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
                 <UnitControl value={shapedColumns.bottomWidth[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "bottomWidth", device) })} beforeIcon='grid-view' ></UnitControl>
               </div>
 
-              {/* top shaped height settings */}
+              {/* bottom shaped height settings */}
               <div style={{ marginTop: '10px', marginBottom: '20px' }}>
                 <PanelRow>
                   <Label className='mb5'>{__('Bottom Shaped Height:', 'container-block')}</Label>

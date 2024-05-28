@@ -10,8 +10,6 @@ const Edit = props => {
 	const { className, setAttributes, attributes, clientId, } = props;
 	const { tab, align, cId } = attributes;
 
-	console.log("iddddd:", cId);
-
 	useEffect(() => { clientId && setAttributes({ cId: clientId.substring(0, 10) }); }, [clientId]); // Set & Update clientId to cId
 
 	return <Fragment>
