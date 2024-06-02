@@ -15,6 +15,13 @@ class CTRBContainerBlock{
 		wp_set_script_translations( 'ctrb-container-editor-script', 'container-block', CTRB_DIR_PATH . 'languages' );
 	}
 
+	function fetch_svg_content($url) {
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return file_get_contents($url);
+        }
+        return '';
+    }
+
 	function render( $attributes, $innerBlocks ){
 		extract( $attributes );
 
@@ -46,12 +53,26 @@ function container($attributes, $innerBlocks) {
     $bottomShaped = $shaped['bottomShaped'];
     $topColors = $shaped['topColors'];
     $bottomColors = $shaped['bottomColors'];
+		$topUploadSvg = $shaped["topUploadSvg"];
+		$bottomUploadSvg = $shaped["bottomUploadSvg"];
+
+		$isShaped = $shaped["isShaped"];
+		$topUploadShaped = $isShaped["topUploadShaped"];
+		$bottomUploadShaped = $isShaped["bottomUploadShaped"];
 
     ob_start();
     ?>
     <div class="mainDiv">
-        <?php if ($topShaped !== 'none') : ?>
-        <div class="top-shaped">
+
+		<!-- Top shaped section here -->
+				<?php if($topUploadShaped): ?>
+					<div class="top-shaped">
+						<?php echo $this->fetch_svg_content($topUploadSvg['url']); ?>
+          </div>
+
+				<?php else: ?>
+        	<?php if ($topShaped !== 'none') : ?>
+        	 <div class="top-shaped">
             <?php
             if ($topShaped === 'ocean wave') {
                 echo '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1000 100" preserveAspectRatio="none"><g clipPath="url(#eb-shape-divider-ocean-wave)"><path className="eb-shape-divider-fill" fill="' . $topColors . '" d="M0 97.79S101.82-.97 283.17 5.23c203.09 0 290.46 94.4 716.83 94.4V0H0v97.79Z"></path></g><defs><clipPath id="eb-shape-divider-ocean-wave"><path fill="#fff" className="eb-shape-divider-fill" d="M0 0h1000v99.62H0z"></path></clipPath></defs></svg>';
@@ -88,15 +109,22 @@ function container($attributes, $innerBlocks) {
 	</svg>';
             }
             ?>
-        </div>
-        <?php endif; ?>
+       	 </div>
+        	<?php endif; ?>
+				<?php endif; ?>
 
-        <?php if ($bottomShaped !== 'none') : ?>
-        <div class="bottom-shaped">
+				<!-- Bottom shaped section here -->
+        <?php if($bottomUploadShaped): ?>
+					<div class="bottom-shaped">
+           <?php echo $this->fetch_svg_content($bottomUploadSvg['url']); ?>
+          </div>
+					<?php else: ?>
+					<?php if ($bottomShaped !== 'none') : ?>
+           <div class="bottom-shaped">
             <?php
-            if ($bottomShaped === 'ocean wave') {
+             if ($bottomShaped === 'ocean wave') {
                 echo '<svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1000 100" preserveAspectRatio="none"><g clipPath="url(#eb-shape-divider-ocean-wave)"><path className="eb-shape-divider-fill" fill="'.$bottomColors.'" d="M0 97.79S101.82-.97 283.17 5.23c203.09 0 290.46 94.4 716.83 94.4V0H0v97.79Z"></path></g><defs><clipPath id="eb-shape-divider-ocean-wave"><path fill="#fff" className="eb-shape-divider-fill" d="M0 0h1000v99.62H0z"></path></clipPath></defs></svg>';
-            } elseif ($bottomShaped === 'asymmetric triangle') {
+             } elseif ($bottomShaped === 'asymmetric triangle') {
                 echo '<svg
 		{...props}
 		preserveAspectRatio="none"
@@ -120,7 +148,7 @@ function container($attributes, $innerBlocks) {
 			</clipPath>
 		</defs>
 	</svg>';
-            } elseif ($bottomShaped === 'abstract paintbrush') {
+             } elseif ($bottomShaped === 'abstract paintbrush') {
                 echo '<svg
 		{...props}
 		preserveAspectRatio="none"
@@ -133,7 +161,7 @@ function container($attributes, $innerBlocks) {
 			fill="'.$bottomColors.'"
 		/>
 	</svg>';
-            } elseif ($bottomShaped === 'asymmetric curve') {
+             } elseif ($bottomShaped === 'asymmetric curve') {
                 echo '<svg
 		{...props}
 		fill="none"
@@ -147,10 +175,10 @@ function container($attributes, $innerBlocks) {
 			fill="'.$bottomColors.'"
 		/>
 	</svg>';
-            }
-            ?>
-        </div>
-        <?php endif; ?>
+             }?>
+         </div>
+         <?php endif; ?>
+				<?php endif; ?>
 
         <div class="innerBlock">
             <?php echo $innerBlocks; ?>
@@ -162,3 +190,4 @@ function container($attributes, $innerBlocks) {
 
 }
 new CTRBContainerBlock();
+require_once("ExtendMime.php");

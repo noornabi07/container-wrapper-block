@@ -15,23 +15,28 @@ html {
   width: 100%;
   position: relative;
 }
-.top-shaped svg {
+
+.top-shaped {
   position: absolute;
   top: 0;
   left: 0;
-  
+  right: 0;
 }
+.top-shaped svg{
+  height: auto;
+}
+
 .bottom-shaped svg {
   position: absolute;
   left: 0;
   bottom: 0;
+  height: auto;
 }
 
 .innerBlock {
   position: absolute;
   height: 300px;
   width: 100%;
-  
 }
 
 // Block Name
@@ -53,4 +58,3 @@ html {
     max-width: 100%;
   }
 }
-

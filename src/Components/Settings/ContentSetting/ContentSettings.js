@@ -2,27 +2,31 @@ import { PanelBody, PanelRow, SelectControl, ToggleControl, __experimentalUnitCo
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import React, { useState } from 'react';
-import { BDevice, Label, BColor } from '../../../../../Components';
+import { BDevice, Label, BColor, Typography } from '../../../../../Components';
 import { updateData } from '../../../utils/functions';
 import { produce } from 'immer';
 import { alignmentOptions, shapedOptions } from '../../../utils/options';
 import Premium from './Premium';
 import BottomPremium from './BottomPremium';
+import { MediaArea } from '../../Panel/MediaArea/MediaArea';
 
 
 const ContentSettings = ({ attributes, setAttributes }) => {
-  const { columns, isWrapper, isHeight, contentAlign, shapedButton, shaped, align, heightColumns, shapedColumns, isTopFlip, isBottomFlip, isTopFront, isBottomFront } = attributes;
-
-
-  const { topColors, bottomColors } = shaped;
-
   const [device, setDevice] = useState('desktop');
-  const { topShaped, bottomShaped } = shaped;
+  const { columns, shaped, align, heightColumns, shapedColumns, innerBlockStyles } = attributes;
+
+  const { topColors, bottomColors, topShaped, bottomShaped, isShaped, topUploadSvg, bottomUploadSvg, flip, front, shapedButton } = shaped;
+  const { topUploadShaped, bottomUploadShaped } = isShaped;
+  const { isTopFlip, isBottomFlip } = flip;
+  const { isTopFront, isBottomFront } = front;
+  const { isWrapper, isHeight, contentAlign, contentColor, contentTypo } = innerBlockStyles;
+
+
 
   return (
     <Fragment>
       {/* General setting */}
-      <PanelBody title={__("General", "container-block")} initialOpen={false}>
+      <PanelBody title={__("General", "container-block")} initialOpen={true}>
         {/* wrapper width */}
         <div>
           <h4>Wrapper Width</h4>
@@ -42,13 +46,25 @@ const ContentSettings = ({ attributes, setAttributes }) => {
           <UnitControl value={columns.width[device]} onChange={val => setAttributes({ columns: updateData(columns, val, "width", device) })} beforeIcon='grid-view' ></UnitControl>
         </div>
 
+        {/* Inner Content color setup */}
+        <div style={{ marginBottom: "5px" }}>
+          <BColor label={__('Content Color', 'container-block')} value={contentColor} onChange={val => setAttributes({
+            innerBlockStyles: updateData(innerBlockStyles, val, "contentColor")
+          })} defaultColor='#F7ED39' />
+        </div>
+
+        {/* Inner content typography */}
+        <div style={{marginBottom: "10px"}}>
+          <Typography label={__('Content Typo', 'container-block')} value={contentTypo} onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "contentTypo") })} defaults={{ fontSize: 20 }} />
+        </div>
+
         {/* ToggleControl */}
         <div>
           {/* wrapper */}
           <ToggleControl
             label="Use With In Wrapper"
             checked={isWrapper}
-            onChange={() => setAttributes({ isWrapper: !isWrapper })}
+            onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "isWrapper") })}
           >
           </ToggleControl>
 
@@ -56,7 +72,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
           <ToggleControl
             label="Use Custom Height"
             checked={isHeight}
-            onChange={() => setAttributes({ isHeight: !isHeight })}
+            onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "isHeight") })}
           >
           </ToggleControl>
           {
@@ -75,7 +91,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
                 value={contentAlign}
                 options={alignmentOptions}
                 onChange={(val) => {
-                  setAttributes({ contentAlign: val })
+                  setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "contentAlign") })
                 }}
               >
               </SelectControl>
@@ -85,28 +101,43 @@ const ContentSettings = ({ attributes, setAttributes }) => {
       </PanelBody>
 
       {/* shaped divider setting */}
-      <PanelBody title={__("Shaped Divider", "container-block")} initialOpen={false}>
+      <PanelBody title={__("Shaped Divider", "container-block")} initialOpen={true}>
         <div style={{ marginBottom: "20px" }}>
           <div className='shaped-types'>
             {
-              ["top", "bottom"].map((el, i) => <button className={`${shapedButton === el && "shapedActive"}`} onClick={() => setAttributes({ shapedButton: el })} key={i}>{el}</button>)
+              ["top", "bottom"].map((el, i) => <button className={`${shapedButton === el && "shapedActive"}`} onClick={() => setAttributes({ shaped: updateData(shaped, el, "shapedButton") })} key={i}>{el}</button>)
             }
           </div>
         </div>
 
+
         {
-          shapedButton === "top" ? <><SelectControl
-            label={__("Top Shaped Type", "container-block")}
-            value={topShaped}
-            options={shapedOptions}
-            onChange={(val) => {
-              const newShaped = produce(shaped, draft => {
-                draft.topShaped = val
-              })
-              setAttributes({ shaped: newShaped })
-            }}
+          shapedButton === "top" ? <> <ToggleControl
+            label="Top Upload Shaped"
+            checked={topUploadShaped}
+            onChange={val => setAttributes({ shaped: updateData(shaped, val, "isShaped", "topUploadShaped") })}
           >
-          </SelectControl>
+          </ToggleControl>
+
+            {
+              topUploadShaped === true && <div style={{ margin: "10px 0px" }}>
+                <MediaArea value={topUploadSvg} types="image/svg+xml" onChange={val => setAttributes({
+                  shaped: updateData(shaped, val.url, "topUploadSvg", "url")
+                })} height="100%" width="100%" />
+              </div>
+            }
+
+            {
+              topUploadShaped === false && <SelectControl
+                label={__("Top Shaped Type", "container-block")}
+                value={topShaped}
+                options={shapedOptions}
+                onChange={(val) => {
+                  setAttributes({ shaped: updateData(shaped, val, "topShaped") })
+                }}
+              >
+              </SelectControl>
+            }
 
             <Premium attributes={attributes} />
 
@@ -138,7 +169,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
             <ToggleControl
               label="Flip"
               checked={isTopFlip}
-              onChange={() => setAttributes({ isTopFlip: !isTopFlip })}
+              onChange={val => setAttributes({ shaped: updateData(shaped, val, "flip", "isTopFlip") })}
             >
             </ToggleControl>
 
@@ -146,67 +177,83 @@ const ContentSettings = ({ attributes, setAttributes }) => {
             <ToggleControl
               label="Bring to Front"
               checked={isTopFront}
-              onChange={() => setAttributes({ isTopFront: !isTopFront })}
+              onChange={val => setAttributes({ shaped: updateData(shaped, val, "front", "isTopFront") })}
             >
             </ToggleControl>
 
           </> : <>
-              
-              {/* Bottom shaped */}
 
-            <SelectControl
-            label={__("Bottom Shaped Type", "container-block")}
-            value={bottomShaped}
-            options={shapedOptions}
-            onChange={(val) => {
-              const newShaped = produce(shaped, draft => {
-                draft.bottomShaped = val
+            {/* Bottom shaped */}
+            {/* Bottom upload shaped */}
+            <ToggleControl
+              label="Bottom Upload Shaped"
+              checked={bottomUploadShaped}
+              onChange={val => setAttributes({ shaped: updateData(shaped, val, "isShaped", "bottomUploadShaped") })}
+            >
+            </ToggleControl>
+            {
+              bottomUploadShaped === true && <div style={{ margin: "10px 0px" }}>
+                <MediaArea value={bottomUploadSvg} types="image/svg+xml" onChange={val => setAttributes({
+                  shaped: updateData(shaped, val.url, "bottomUploadSvg", "url")
+                })} height="100%" width="100%" />
+              </div>
+            }
+
+            {
+              bottomUploadShaped === false && <SelectControl
+                label={__("Bottom Shaped Type", "container-block")}
+                value={bottomShaped}
+                options={shapedOptions}
+                onChange={(val) => {
+                  const newShaped = produce(shaped, draft => {
+                    draft.bottomShaped = val
+                  })
+                  setAttributes({ shaped: newShaped })
+                }}
+              >
+              </SelectControl>
+            }
+
+            <BottomPremium attributes={attributes} />
+            <BColor label={__('Bottom Shaped Color', 'container-block')} value={bottomColors} onChange={val => setAttributes({
+              shaped: produce(shaped, draft => {
+                draft.bottomColors = val
               })
-              setAttributes({ shaped: newShaped })
-            }}
-          >
-          </SelectControl>
+            })} defaultColor='#006769' />
 
-              <BottomPremium attributes={attributes} />
-              <BColor label={__('Bottom Shaped Color', 'container-block')} value={bottomColors} onChange={val => setAttributes({
-                shaped: produce(shaped, draft => {
-                  draft.bottomColors = val
-                })
-              })} defaultColor='#006769' />
+            {/* bottom shaped width setting */}
+            <div style={{ marginTop: '10px', marginBottom: '20px' }}>
+              <PanelRow>
+                <Label className='mb5'>{__('Bottom Shaped Width:', 'container-block')}</Label>
+                <BDevice device={device} onChange={val => setDevice(val)} />
+              </PanelRow>
+              <UnitControl value={shapedColumns.bottomWidth[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "bottomWidth", device) })} beforeIcon='grid-view' ></UnitControl>
+            </div>
 
-              {/* bottom shaped width setting */}
-              <div style={{ marginTop: '10px', marginBottom: '20px' }}>
-                <PanelRow>
-                  <Label className='mb5'>{__('Bottom Shaped Width:', 'container-block')}</Label>
-                  <BDevice device={device} onChange={val => setDevice(val)} />
-                </PanelRow>
-                <UnitControl value={shapedColumns.bottomWidth[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "bottomWidth", device) })} beforeIcon='grid-view' ></UnitControl>
-              </div>
+            {/* bottom shaped height settings */}
+            <div style={{ marginTop: '10px', marginBottom: '20px' }}>
+              <PanelRow>
+                <Label className='mb5'>{__('Bottom Shaped Height:', 'container-block')}</Label>
+                <BDevice device={device} onChange={val => setDevice(val)} />
+              </PanelRow>
+              <UnitControl value={shapedColumns.bottomHeight[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "bottomHeight", device) })} beforeIcon='grid-view' ></UnitControl>
+            </div>
 
-              {/* bottom shaped height settings */}
-              <div style={{ marginTop: '10px', marginBottom: '20px' }}>
-                <PanelRow>
-                  <Label className='mb5'>{__('Bottom Shaped Height:', 'container-block')}</Label>
-                  <BDevice device={device} onChange={val => setDevice(val)} />
-                </PanelRow>
-                <UnitControl value={shapedColumns.bottomHeight[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "bottomHeight", device) })} beforeIcon='grid-view' ></UnitControl>
-              </div>
+            {/* Toggle flip */}
+            <ToggleControl
+              label="Flip"
+              checked={isBottomFlip}
+              onChange={val => setAttributes({ shaped: updateData(shaped, val, "flip", "isBottomFlip") })}
+            >
+            </ToggleControl>
 
-              {/* Toggle flip */}
-              <ToggleControl
-                label="Flip"
-                checked={isBottomFlip}
-                onChange={() => setAttributes({ isBottomFlip: !isBottomFlip })}
-              >
-              </ToggleControl>
-
-              {/* toggle front */}
-              <ToggleControl
-                label="Bring to Front"
-                checked={isBottomFront}
-                onChange={() => setAttributes({ isBottomFront: !isBottomFront })}
-              >
-              </ToggleControl>
+            {/* toggle front */}
+            <ToggleControl
+              label="Bring to Front"
+              checked={isBottomFront}
+              onChange={val => setAttributes({ shaped: updateData(shaped, val, "front", "isBottomFront") })}
+            >
+            </ToggleControl>
 
           </>
         }

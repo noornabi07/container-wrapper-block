@@ -18,3 +18,6 @@ export const alignmentOptions = [
   { value: 'center', label: 'Center' },
   { value: 'end', label: 'Bottom' }
 ]
+
+
+

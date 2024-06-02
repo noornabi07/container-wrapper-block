@@ -1,11 +1,16 @@
 import React from 'react';
-import { getBackgroundCSS, getBorderCSS } from '../../../../Components/utils/getCSS';
+import { getBackgroundCSS, getBorderCSS, getTypoCSS } from '../../../../Components/utils/getCSS';
 import { getBoxCss } from '../../utils/functions';
 
 const MainStyle = ({ attributes }) => {
-  const { columns, cId, heightColumns, background, isHeight, contentAlign, marginColumns, paddingColumns, overlyBackground, isOverly, border, shapedColumns, isTopFlip, isBottomFlip } = attributes;
+  const { columns, cId, heightColumns, background, marginColumns, paddingColumns, overlyBackground, border, shapedColumns, innerBlockStyles, shaped } = attributes;
 
-  const { oNormalBg, oHoverBg, normalOpacity, hoverOpacity, hoverTransition } = overlyBackground;
+  const { oNormalBg, oHoverBg, normalOpacity, hoverOpacity, hoverTransition, isOverly, } = overlyBackground;
+  const { isHeight, contentAlign, contentColor, contentTypo } = innerBlockStyles;
+  const { flip, isShaped } = shaped;
+  const { isTopFlip, isBottomFlip } = flip;
+  const { bottomUploadShaped } = isShaped;
+
 
 
   const mainWrapper = `#wrapper-${cId}`;
@@ -13,6 +18,8 @@ const MainStyle = ({ attributes }) => {
   const innerBlock = `${mainDiv} .innerBlock`;
   const bottomShaped = `${mainDiv} .bottom-shaped`;
   const topShaped = `${mainDiv} .top-shaped`;
+
+  // ${ shapedColumns.topHeight.desktop }
 
   return (
     <style>
@@ -28,8 +35,12 @@ const MainStyle = ({ attributes }) => {
             ${contentAlign === "end" && `
               top: 70%;
             `}
-          `}
+          `};
+          color: ${contentColor};
         }
+
+        ${getTypoCSS(`${innerBlock}`, contentTypo)?.styles};
+
         ${innerBlock}::before{
           content: "";
           position: absolute;
@@ -104,7 +115,16 @@ const MainStyle = ({ attributes }) => {
           ${getBoxCss(paddingColumns.padding.desktop, "padding")};
           ${getBorderCSS(border)};
           
-        }   
+        } 
+
+        ${topShaped} svg{
+        width: ${shapedColumns.topWidth.desktop};
+        height: ${shapedColumns.topHeight.desktop};
+        ${isTopFlip === true && `
+          transform: translateX(0%) rotateY(180deg);
+        `}
+      }
+
         @media only screen and (max-width:640px){
           ${mainDiv}{
           height:inherit;
@@ -113,6 +133,7 @@ const MainStyle = ({ attributes }) => {
           ${getBoxCss(marginColumns.margin.mobile, "margin")};
         }
       }
+
       @media only screen and (min-width:641px) and (max-width: 1024px){
         ${mainDiv}{
           height:inherit;
@@ -122,16 +143,9 @@ const MainStyle = ({ attributes }) => {
         }
       }
 
-      ${topShaped} svg{
-        width: ${shapedColumns.topWidth.desktop};
-        height: ${shapedColumns.topHeight.desktop};
-        ${isTopFlip === true && `
-          transform: translateX(0%) rotateY(180deg);
-        `}
-      }
       @media only screen and (min-width:641px) and (max-width: 1024px){
         ${topShaped} svg{
-          width: ${shapedColumns.topWidth.tablet};
+          width: ${shapedColumns.topWidth.tablet} !important;
           height: ${shapedColumns.topHeight.tablet};
         }
       }
@@ -150,6 +164,10 @@ const MainStyle = ({ attributes }) => {
         `};
         ${isBottomFlip === false && `
           transform: rotate(180deg);
+        `}
+        ${bottomUploadShaped === true && `
+          transform: none;
+
         `}
       }
       @media only screen and (min-width:641px) and (max-width: 1024px){

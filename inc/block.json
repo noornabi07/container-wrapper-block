@@ -34,7 +34,7 @@
     "columns": {
       "type": "object",
       "default": {
-        "width": { "desktop": "", "tablet": "", "mobile": "" }
+        "width": { "desktop": "100%", "tablet": "", "mobile": "" }
       }
     },
     "heightColumns": {
@@ -74,12 +74,7 @@
         }
       }
     },
-    "border": {
-      "type": "object",
-      "default": {
-        "radius": "5px"
-      }
-    },
+
     "background": {
       "type": "object",
       "default": {
@@ -88,9 +83,12 @@
         "transition": 0.5
       }
     },
+
     "overlyBackground": {
       "type": "object",
       "default": {
+        "isOverly": false,
+        "blendType": "normal",
         "oNormalBg": { "color": "#fff" },
         "oHoverBg": { "color": "#fff" },
         "normalOpacity": 0.3,
@@ -98,41 +96,45 @@
         "hoverTransition": 0.4
       }
     },
-    "actionStyleButton": {
-      "type": "string",
-      "default": "normal"
+
+    "innerBlockStyles": {
+      "type": "object",
+      "default": {
+        "isFilterCss": false,
+        "isWrapper": false,
+        "isHeight": false,
+        "contentAlign": "top",
+        "contentColor": "#F7ED39",
+        "border": {"radius": "5px"},
+        "actionStyleButton": "normal",
+        "overlyStyleButton": "normal",
+        "borderStyleButton": "normal",
+        "contentTypo": {"fontSize": 20}
+      }
     },
-    "overlyStyleButton": {
-      "type": "string",
-      "default": "normal"
-    },
-    "borderStyleButton": {
-      "type": "string",
-      "default": "normal"
-    },
-    "isWrapper": {
-      "type": "boolean",
-      "default": false
-    },
-    "isHeight": {
-      "type": "boolean",
-      "default": false
-    },
-    "contentAlign": {
-      "type": "string",
-      "default": "top"
-    },
-    "shapedButton": {
-      "type": "string",
-      "default": "top"
-    },
+
     "shaped": {
       "type": "object",
       "default": {
+        "shapedButton": "top",
         "topShaped": "none",
         "bottomShaped": "none",
         "topColors": "#006769",
-        "bottomColors": "#006769"
+        "bottomColors": "#006769",
+        "topUploadSvg": {"url": ""},
+        "bottomUploadSvg": {"url": ""},
+        "isShaped": {
+          "topUploadShaped": false,
+          "bottomUploadShaped": false
+        },
+        "flip": {
+          "isTopFlip": false,
+          "isBottomFlip": false
+        },
+        "front": {
+          "isTopFront": false,
+          "isBottomFront": false
+        }
       }
     },
     "shapedColumns": {
@@ -149,41 +151,18 @@
           "mobile": ""
         },
         "topHeight": {
-          "desktop": "75px",
+          "desktop": "",
           "tablet": "",
           "mobile": ""
         },
         "bottomHeight": {
-          "desktop": "75px",
+          "desktop": "",
           "tablet": "",
           "mobile": ""
         }
       }
     },
-    "isTopFlip": {
-      "type": "boolean",
-      "default": false
-    },
-    "isBottomFlip": {
-      "type": "boolean",
-      "default": false
-    },
-    "isTopFront": {
-      "type": "boolean",
-      "default": false
-    },
-    "isBottomFront": {
-      "type": "boolean",
-      "default": false
-    },
-    "isOverly": {
-      "type": "boolean",
-      "default": false
-    },
-    "blendType": {
-      "type": "string",
-      "default": "normal"
-    },
+    
     "isFilterCss": {
       "type": "boolean",
       "default": false

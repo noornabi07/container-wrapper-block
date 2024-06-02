@@ -10,11 +10,12 @@ import { produce } from 'immer';
 
 
 const StyleSetting = ({ attributes, setAttributes }) => {
-  const { marginColumns, paddingColumns, background, isOverly, overlyBackground, blendType, isFilterCss, border, actionStyleButton, overlyStyleButton, borderStyleButton } = attributes;
+  const { marginColumns, paddingColumns, background, overlyBackground, innerBlockStyles } = attributes;
 
   const [device, setDevice] = useState('desktop');
   const { normalBg, hoverBg, transition } = background;
-  const { oNormalBg, oHoverBg, normalOpacity, hoverOpacity, hoverTransition } = overlyBackground;
+  const { oNormalBg, oHoverBg, normalOpacity, hoverOpacity, hoverTransition, isOverly, blendType } = overlyBackground;
+  const { isFilterCss, actionStyleButton, overlyStyleButton, borderStyleButton, border} = innerBlockStyles;
 
 
   return (
@@ -44,13 +45,14 @@ const StyleSetting = ({ attributes, setAttributes }) => {
         <div style={{ marginTop: "10px" }}>
           <div className='shaped-types'>
             {
-              ["normal", "hover"].map((val, i) => <button className={`${actionStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ actionStyleButton: val })} key={i}>{val}</button>)
+              ["normal", "hover"].map((val, i) => <button className={`${actionStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "actionStyleButton") })} key={i}>{val}</button>)
             }
           </div>
         </div>
 
         {
-          actionStyleButton === "normal" ? <>
+          actionStyleButton === "normal" ?
+            <>
             {/* Background */}
             <Background label={__('Background Color', 'container-block')} value={normalBg} onChange={val => {
               const newBg = produce(background, draft => {
@@ -64,20 +66,21 @@ const StyleSetting = ({ attributes, setAttributes }) => {
               <ToggleControl
                 label="Enable Overly"
                 checked={isOverly}
-                onChange={() => setAttributes({ isOverly: !isOverly })}
+                onChange={val => setAttributes({ overlyBackground: updateData(overlyBackground, val, "isOverly") })}
               >
               </ToggleControl>
               {
-                isOverly === true ? <>
+                  isOverly === true ?
+                    <>
                   <div style={{ marginTop: "10px" }}>
                     <div className='shaped-types'>
                       {
-                        ["normal", "hover"].map((val, i) => <button className={`${overlyStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ overlyStyleButton: val })} key={i}>{val}</button>)
+                        ["normal", "hover"].map((val, i) => <button className={`${overlyStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "overlyStyleButton") })} key={i}>{val}</button>)
                       }
                     </div>
                   </div>
 
-                  {/* background */}
+                  {/* overly normal background */}
                   <Background label={__('Overly Color', 'container-block')} value={oNormalBg} onChange={val => {
                     const newBg = produce(overlyBackground, draft => {
                       draft.oNormalBg = val
@@ -114,7 +117,7 @@ const StyleSetting = ({ attributes, setAttributes }) => {
                       { value: 'luminosity', label: 'Luminosity' }
                     ]}
                     onChange={(val) => {
-                      setAttributes({ blendType: val })
+                      setAttributes({ overlyBackground: updateData(overlyBackground, val, "blendType") })
                     }}
                   >
                   </SelectControl>
@@ -122,7 +125,7 @@ const StyleSetting = ({ attributes, setAttributes }) => {
                   <ToggleControl
                     label="CSS Filters"
                     checked={isFilterCss}
-                    onChange={() => setAttributes({ isFilterCss: !isFilterCss })}
+                    onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "isFilterCss") })}
                   >
                   </ToggleControl>
 
@@ -130,7 +133,7 @@ const StyleSetting = ({ attributes, setAttributes }) => {
               }
             </div></> :
             <>
-              {/* Hover Background */}
+              {/* Hover  Background */}
               <Background label={__('Hover Background Color', 'container-block')} value={hoverBg} onChange={val => {
                 const newBg = produce(background, draft => {
                   draft.hoverBg = val
@@ -158,7 +161,7 @@ const StyleSetting = ({ attributes, setAttributes }) => {
                 <ToggleControl
                   label="Enable Overly"
                   checked={isOverly}
-                  onChange={() => setAttributes({ isOverly: !isOverly })}
+                  onChange={val => setAttributes({ overlyBackground: updateData(overlyBackground, val, "isOverly") })}
                 >
                 </ToggleControl>
                 {
@@ -167,13 +170,15 @@ const StyleSetting = ({ attributes, setAttributes }) => {
                       <div style={{ marginTop: "10px" }}>
                         <div className='shaped-types'>
                           {
-                            ["normal", "hover"].map((val, i) => <button className={`${overlyStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ overlyStyleButton: val })} key={i}>{val}</button>)
+                            ["normal", "hover"].map((val, i) => <button className={`${overlyStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "overlyStyleButton") })} key={i}>{val}</button>)
                           }
                         </div>
+
                       </div>
 
                       {
-                        overlyStyleButton === "normal" ? <>{/* Overly background */}
+                        overlyStyleButton === "normal" ?
+                          <>{/* Overly background */}
                           <Background label={__('Overly Color', 'container-block')} value={oHoverBg} onChange={val => {
                             const newBg = produce(overlyBackground, draft => {
                               draft.oHoverBg = val
@@ -213,7 +218,8 @@ const StyleSetting = ({ attributes, setAttributes }) => {
                               setAttributes({ blendType: val })
                             }}
                           >
-                          </SelectControl></> : <>{/* Overly background */}
+                            </SelectControl></> :
+                          <>{/* Overly background */}
                           <Background label={__('Overly Color', 'container-block')} value={oHoverBg} onChange={val => {
                             const newBg = produce(overlyBackground, draft => {
                               draft.oHoverBg = val
@@ -290,13 +296,14 @@ const StyleSetting = ({ attributes, setAttributes }) => {
         <div style={{ marginTop: "10px" }}>
           <div className='shaped-types'>
             {
-              ["normal", "hover"].map((value, i) => <button className={`${borderStyleButton === value && "shapedActive"}`} onClick={() => setAttributes({ borderStyleButton: value })} key={i}>{value}</button>)
+              ["normal", "hover"].map((value, i) => <button className={`${borderStyleButton === value && "shapedActive"}`} onClick={() => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, value, "borderStyleButton") })} key={i}>{value}</button>)
             }
           </div>
         </div>
+      
 
         {/* Border Control */}
-        <BorderControl label={__('Border:', 'text-domain')} value={border} onChange={val => setAttributes({ border: val })} defaults={{ radius: '5px' }} />
+        <BorderControl label={__('Border:', 'text-domain')} value={border} onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "border") })} defaults={{ radius: '5px' }} />
       </PanelBody>
     </Fragment>
   );
