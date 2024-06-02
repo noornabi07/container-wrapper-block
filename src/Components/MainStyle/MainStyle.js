@@ -41,13 +41,7 @@ const MainStyle = ({ attributes }) => {
 
         ${getTypoCSS(`${innerBlock}`, contentTypo)?.styles};
 
-        ${innerBlock}::before{
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+        ${innerBlock}::before{      
           ${isOverly === true && `
             ${getBackgroundCSS(oNormalBg)}
           `};
@@ -55,12 +49,6 @@ const MainStyle = ({ attributes }) => {
         }
 
         ${innerBlock}:hover::before{
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
           transition: ${hoverTransition}s ease-in-out;
           ${isOverly === true && `
             ${getBackgroundCSS(oHoverBg)}
@@ -78,43 +66,18 @@ const MainStyle = ({ attributes }) => {
             height: 80px;
           `}
         }
+
         ${mainWrapper}:hover{
           ${getBackgroundCSS(background.hoverBg)}
           transition: ${background.transition}s ease-in-out;
         }
-        @media only screen and (max-width: 640px){
-          ${mainWrapper}{
-            ${isHeight === true && `
-            height: ${heightColumns.height.mobile};
-            overflow: scroll;
-            display: flex;
-            align-items: center;
-          `}
-          ${isHeight === false && `
-            height: 80px;
-          `}
-          }
-        }
-        @media only screen and (min-width: 641px) and (max-width: 1024px){
-          ${mainWrapper}{
-            ${isHeight === true && `
-            height: ${heightColumns.height.tablet};
-            overflow: scroll;
-            display: flex;
-            align-items: center;
-          `}
-          ${isHeight === false && `
-            height: 80px;
-          `}
-          }
-        }
+
         ${mainDiv}{
           height:inherit;
           width: ${columns.width.desktop || "100%"};
           ${getBoxCss(marginColumns.margin.desktop, "margin")};
           ${getBoxCss(paddingColumns.padding.desktop, "padding")};
           ${getBorderCSS(border)};
-          
         } 
 
         ${topShaped} svg{
@@ -123,37 +86,6 @@ const MainStyle = ({ attributes }) => {
         ${isTopFlip === true && `
           transform: translateX(0%) rotateY(180deg);
         `}
-      }
-
-        @media only screen and (max-width:640px){
-          ${mainDiv}{
-          height:inherit;
-          width: ${columns.width.mobile};
-          ${getBoxCss(paddingColumns.padding.mobile, "padding")};
-          ${getBoxCss(marginColumns.margin.mobile, "margin")};
-        }
-      }
-
-      @media only screen and (min-width:641px) and (max-width: 1024px){
-        ${mainDiv}{
-          height:inherit;
-          width: ${columns.width.tablet};
-          ${getBoxCss(paddingColumns.padding.tablet, "padding")};
-          ${getBoxCss(marginColumns.margin.tablet, "margin")};
-        }
-      }
-
-      @media only screen and (min-width:641px) and (max-width: 1024px){
-        ${topShaped} svg{
-          width: ${shapedColumns.topWidth.tablet} !important;
-          height: ${shapedColumns.topHeight.tablet};
-        }
-      }
-      @media only screen and (max-width: 640px){
-        ${topShaped} svg{
-          width: ${shapedColumns.topWidth.mobile};
-          height: ${shapedColumns.topHeight.mobile};
-        }
       }
 
       ${bottomShaped} svg{
@@ -167,21 +99,72 @@ const MainStyle = ({ attributes }) => {
         `}
         ${bottomUploadShaped === true && `
           transform: none;
-
         `}
       }
-      @media only screen and (min-width:641px) and (max-width: 1024px){
-        ${bottomShaped} svg{
-          width: ${shapedColumns.bottomWidth.tablet};
-          height: ${shapedColumns.bottomHeight.tablet};
+
+        @media only screen and (max-width:640px){
+          ${mainWrapper}{
+          ${isHeight === true && `
+            height: ${heightColumns.height.mobile};
+            overflow: scroll;
+            display: flex;
+            align-items: center;
+          `}
+          ${isHeight === false && `
+            height: 80px;
+          `}
+          }
+
+          ${mainDiv}{
+          height:inherit;
+          width: ${columns.width.mobile};
+          ${getBoxCss(paddingColumns.padding.mobile, "padding")};
+          ${getBoxCss(marginColumns.margin.mobile, "margin")};
         }
-      }
-      @media only screen and (max-width: 640px){
+
+        ${topShaped} svg{
+          width: ${shapedColumns.topWidth.mobile};
+          height: ${shapedColumns.topHeight.mobile};
+        }
+
         ${bottomShaped} svg{
           width: ${shapedColumns.bottomWidth.mobile};
           height: ${shapedColumns.bottomHeight.mobile};
         }
+
       }
+
+      @media only screen and (min-width:641px) and (max-width: 1024px){
+        ${mainDiv}{
+          height:inherit;
+          width: ${columns.width.tablet};
+          ${getBoxCss(paddingColumns.padding.tablet, "padding")};
+          ${getBoxCss(marginColumns.margin.tablet, "margin")};
+        }
+
+        ${topShaped} svg{
+          width: ${shapedColumns.topWidth.tablet} !important;
+          height: ${shapedColumns.topHeight.tablet};
+        }
+
+         ${bottomShaped} svg{
+          width: ${shapedColumns.bottomWidth.tablet};
+          height: ${shapedColumns.bottomHeight.tablet};
+        }
+
+        ${mainWrapper}{
+            ${isHeight === true && `
+            height: ${heightColumns.height.tablet};
+            overflow: scroll;
+            display: flex;
+            align-items: center;
+          `}
+          ${isHeight === false && `
+            height: 80px;
+          `}
+          }
+      }
+
       `}
 
     </style>
