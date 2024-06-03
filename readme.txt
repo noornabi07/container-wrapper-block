@@ -1,7 +1,7 @@
 === Container Block ===
 Contributors: bplugins, noornabi2
 Donate link: https://buymeacoffee.com/abuhayat
-Tags: block, container, wrapper, super-container, Gutenberg block
+Tags: block, container, wrapper, Gutenberg-block
 Requires at least: 6.2+
 Tested up to: 6.5.3
 Stable tag: 1.0.0

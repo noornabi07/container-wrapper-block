@@ -8,8 +8,7 @@
     "container",
     "wrapper",
     "gutenberg",
-    "container-block",
-    "wrapper-block"
+    "container-block"
   ],
   "textdomain": "container-block",
   "attributes": {
