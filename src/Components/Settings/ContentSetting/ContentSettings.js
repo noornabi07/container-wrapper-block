@@ -1,14 +1,15 @@
 import { PanelBody, PanelRow, SelectControl, ToggleControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import React, { useState } from 'react';
-import { BDevice, Label, BColor, Typography } from '../../../../../Components';
-import { updateData } from '../../../utils/functions';
 import { produce } from 'immer';
+import React, { useState } from 'react';
+import { BColor, Label, Typography } from '../../../../../Components';
+import { updateData } from '../../../utils/functions';
 import { alignmentOptions, shapedOptions } from '../../../utils/options';
-import Premium from './Premium';
-import BottomPremium from './BottomPremium';
+import { Device } from '../../Panel/Device/Device';
 import { MediaArea } from '../../Panel/MediaArea/MediaArea';
+import BottomPremium from './BottomPremium';
+import Premium from './Premium';
 
 
 const ContentSettings = ({ attributes, setAttributes }) => {
@@ -41,7 +42,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
         <div style={{ marginTop: '10px', marginBottom: '20px' }}>
           <PanelRow>
             <Label className='mb5'>{__('Content Width:', 'container-block')}</Label>
-            <BDevice device={device} onChange={val => setDevice(val)} />
+            <Device onChange={val => setDevice(val)} />
           </PanelRow>
           <UnitControl value={columns.width[device]} onChange={val => setAttributes({ columns: updateData(columns, val, "width", device) })} beforeIcon='grid-view' ></UnitControl>
         </div>
@@ -54,7 +55,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
         </div>
 
         {/* Inner content typography */}
-        <div style={{marginBottom: "10px"}}>
+        <div style={{ marginBottom: "10px" }}>
           <Typography label={__('Content Typo', 'container-block')} value={contentTypo} onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "contentTypo") })} defaults={{ fontSize: 20 }} />
         </div>
 
@@ -80,7 +81,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
               <div style={{ marginTop: '10px', marginBottom: '20px' }}>
                 <PanelRow>
                   <Label className='mb5'>{__('Height:', 'container-block')}</Label>
-                  <BDevice device={device} onChange={val => setDevice(val)} />
+                  <Device onChange={val => setDevice(val)} />
                 </PanelRow>
                 <UnitControl value={heightColumns.height[device]} onChange={val => setAttributes({ heightColumns: updateData(heightColumns, val, "height", device) })} beforeIcon='grid-view' ></UnitControl>
 
@@ -151,7 +152,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
             <div style={{ marginTop: '10px', marginBottom: '20px' }}>
               <PanelRow>
                 <Label className='mb5'>{__('Top shaped Width:', 'container-block')}</Label>
-                <BDevice device={device} onChange={val => setDevice(val)} />
+                <Device onChange={val => setDevice(val)} />
               </PanelRow>
               <UnitControl value={shapedColumns.topWidth[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "topWidth", device) })} beforeIcon='grid-view' ></UnitControl>
             </div>
@@ -160,7 +161,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
             <div style={{ marginTop: '10px', marginBottom: '20px' }}>
               <PanelRow>
                 <Label className='mb5'>{__('Top shaped Height:', 'container-block')}</Label>
-                <BDevice device={device} onChange={val => setDevice(val)} />
+                <Device onChange={val => setDevice(val)} />
               </PanelRow>
               <UnitControl value={shapedColumns.topHeight[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "topHeight", device) })} beforeIcon='grid-view' ></UnitControl>
             </div>
@@ -225,7 +226,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
             <div style={{ marginTop: '10px', marginBottom: '20px' }}>
               <PanelRow>
                 <Label className='mb5'>{__('Bottom Shaped Width:', 'container-block')}</Label>
-                <BDevice device={device} onChange={val => setDevice(val)} />
+                <Device onChange={val => setDevice(val)} />
               </PanelRow>
               <UnitControl value={shapedColumns.bottomWidth[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "bottomWidth", device) })} beforeIcon='grid-view' ></UnitControl>
             </div>
@@ -234,7 +235,7 @@ const ContentSettings = ({ attributes, setAttributes }) => {
             <div style={{ marginTop: '10px', marginBottom: '20px' }}>
               <PanelRow>
                 <Label className='mb5'>{__('Bottom Shaped Height:', 'container-block')}</Label>
-                <BDevice device={device} onChange={val => setDevice(val)} />
+                <Device onChange={val => setDevice(val)} />
               </PanelRow>
               <UnitControl value={shapedColumns.bottomHeight[device]} onChange={val => setAttributes({ shapedColumns: updateData(shapedColumns, val, "bottomHeight", device) })} beforeIcon='grid-view' ></UnitControl>
             </div>

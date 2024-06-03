@@ -1,12 +1,12 @@
-import { PanelBody, PanelRow, RangeControl, ToggleControl } from '@wordpress/components';
-import React from 'react';
-import { __ } from '@wordpress/i18n';
+import { PanelBody, PanelRow, RangeControl, SelectControl, ToggleControl } from '@wordpress/components';
 import { Fragment, useState } from '@wordpress/element';
-import { BDevice, Label, Background, BorderControl } from '../../../../../Components';
-import { SelectControl } from '@wordpress/components';
-import { BBoxControl } from '../../Panel/BBoxControl/BBoxControl';
-import { updateData } from '../../../utils/functions';
+import { __ } from '@wordpress/i18n';
 import { produce } from 'immer';
+import React from 'react';
+import { Background, BorderControl, Label } from '../../../../../Components';
+import { updateData } from '../../../utils/functions';
+import { BBoxControl } from '../../Panel/BBoxControl/BBoxControl';
+import { Device } from '../../Panel/Device/Device';
 
 
 const StyleSetting = ({ attributes, setAttributes }) => {
@@ -15,7 +15,7 @@ const StyleSetting = ({ attributes, setAttributes }) => {
   const [device, setDevice] = useState('desktop');
   const { normalBg, hoverBg, transition } = background;
   const { oNormalBg, oHoverBg, normalOpacity, hoverOpacity, hoverTransition, isOverly, blendType } = overlyBackground;
-  const { isFilterCss, actionStyleButton, overlyStyleButton, borderStyleButton, border} = innerBlockStyles;
+  const { isFilterCss, actionStyleButton, overlyStyleButton, borderStyleButton, border } = innerBlockStyles;
 
 
   return (
@@ -25,7 +25,7 @@ const StyleSetting = ({ attributes, setAttributes }) => {
         <div>
           <PanelRow>
             <Label className='mb5'>{__('Margin:', 'text-domain')}</Label>
-            <BDevice device={device} onChange={val => setDevice(val)} />
+            <Device onChange={val => setDevice(val)} />
           </PanelRow>
           <BBoxControl values={marginColumns.margin[device]} onChange={val => setAttributes({ marginColumns: updateData(marginColumns, val, "margin", device) })}></BBoxControl>
         </div>
@@ -34,7 +34,7 @@ const StyleSetting = ({ attributes, setAttributes }) => {
         <div>
           <PanelRow>
             <Label className='mb5'>{__('Padding:', 'text-domain')}</Label>
-            <BDevice device={device} onChange={val => setDevice(val)} />
+            <Device onChange={val => setDevice(val)} />
           </PanelRow>
           <BBoxControl values={paddingColumns.padding[device]} onChange={val => setAttributes({ paddingColumns: updateData(paddingColumns, val, "padding", device) })} ></BBoxControl>
         </div>
@@ -53,85 +53,85 @@ const StyleSetting = ({ attributes, setAttributes }) => {
         {
           actionStyleButton === "normal" ?
             <>
-            {/* Background */}
-            <Background label={__('Background Color', 'container-block')} value={normalBg} onChange={val => {
-              const newBg = produce(background, draft => {
-                draft.normalBg = val
-              })
-              setAttributes({ background: newBg })
-            }} defaults={{ color: '#fff' }} />
+              {/* Background */}
+              <Background label={__('Background Color', 'container-block')} value={normalBg} onChange={val => {
+                const newBg = produce(background, draft => {
+                  draft.normalBg = val
+                })
+                setAttributes({ background: newBg })
+              }} defaults={{ color: '#fff' }} />
 
-            {/* ToggleControl */}
-            <div style={{ marginTop: "10px" }}>
-              <ToggleControl
-                label="Enable Overly"
-                checked={isOverly}
-                onChange={val => setAttributes({ overlyBackground: updateData(overlyBackground, val, "isOverly") })}
-              >
-              </ToggleControl>
-              {
+              {/* ToggleControl */}
+              <div style={{ marginTop: "10px" }}>
+                <ToggleControl
+                  label="Enable Overly"
+                  checked={isOverly}
+                  onChange={val => setAttributes({ overlyBackground: updateData(overlyBackground, val, "isOverly") })}
+                >
+                </ToggleControl>
+                {
                   isOverly === true ?
                     <>
-                  <div style={{ marginTop: "10px" }}>
-                    <div className='shaped-types'>
-                      {
-                        ["normal", "hover"].map((val, i) => <button className={`${overlyStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "overlyStyleButton") })} key={i}>{val}</button>)
-                      }
-                    </div>
-                  </div>
+                      <div style={{ marginTop: "10px" }}>
+                        <div className='shaped-types'>
+                          {
+                            ["normal", "hover"].map((val, i) => <button className={`${overlyStyleButton === val && "shapedActive"}`} onClick={() => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "overlyStyleButton") })} key={i}>{val}</button>)
+                          }
+                        </div>
+                      </div>
 
-                  {/* overly normal background */}
-                  <Background label={__('Overly Color', 'container-block')} value={oNormalBg} onChange={val => {
-                    const newBg = produce(overlyBackground, draft => {
-                      draft.oNormalBg = val
-                    })
-                    setAttributes({ overlyBackground: newBg })
-                  }} defaults={{ color: '#fff' }} />
+                      {/* overly normal background */}
+                      <Background label={__('Overly Color', 'container-block')} value={oNormalBg} onChange={val => {
+                        const newBg = produce(overlyBackground, draft => {
+                          draft.oNormalBg = val
+                        })
+                        setAttributes({ overlyBackground: newBg })
+                      }} defaults={{ color: '#fff' }} />
 
-                  {/* Opacity */}
-                  <RangeControl
-                    label="Opacity"
-                    value={normalOpacity}
-                    onChange={val => {
-                      const newOpacity = produce(overlyBackground, draft => {
-                        draft.normalOpacity = val
-                      })
-                      setAttributes({ overlyBackground: newOpacity })
-                    }}
-                    step={0.1}
-                  ></RangeControl>
+                      {/* Opacity */}
+                      <RangeControl
+                        label="Opacity"
+                        value={normalOpacity}
+                        onChange={val => {
+                          const newOpacity = produce(overlyBackground, draft => {
+                            draft.normalOpacity = val
+                          })
+                          setAttributes({ overlyBackground: newOpacity })
+                        }}
+                        step={0.1}
+                      ></RangeControl>
 
-                  <SelectControl
-                    label={__("Blend Mode", "container-block")}
-                    value={blendType}
-                    options={[
-                      { value: 'normal', label: 'Normal' },
-                      { value: 'multiply', label: 'Multiply' },
-                      { value: 'screen', label: 'Screen' },
-                      { value: 'overly', label: 'Overly' },
-                      { value: 'darken', label: 'Darken' },
-                      { value: 'lighten', label: 'Lighten' },
-                      { value: 'color dodge', label: 'Color Dodge' },
-                      { value: 'saturation', label: 'Saturation' },
-                      { value: 'color', label: 'Color' },
-                      { value: 'luminosity', label: 'Luminosity' }
-                    ]}
-                    onChange={(val) => {
-                      setAttributes({ overlyBackground: updateData(overlyBackground, val, "blendType") })
-                    }}
-                  >
-                  </SelectControl>
+                      <SelectControl
+                        label={__("Blend Mode", "container-block")}
+                        value={blendType}
+                        options={[
+                          { value: 'normal', label: 'Normal' },
+                          { value: 'multiply', label: 'Multiply' },
+                          { value: 'screen', label: 'Screen' },
+                          { value: 'overly', label: 'Overly' },
+                          { value: 'darken', label: 'Darken' },
+                          { value: 'lighten', label: 'Lighten' },
+                          { value: 'color dodge', label: 'Color Dodge' },
+                          { value: 'saturation', label: 'Saturation' },
+                          { value: 'color', label: 'Color' },
+                          { value: 'luminosity', label: 'Luminosity' }
+                        ]}
+                        onChange={(val) => {
+                          setAttributes({ overlyBackground: updateData(overlyBackground, val, "blendType") })
+                        }}
+                      >
+                      </SelectControl>
 
-                  <ToggleControl
-                    label="CSS Filters"
-                    checked={isFilterCss}
-                    onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "isFilterCss") })}
-                  >
-                  </ToggleControl>
+                      <ToggleControl
+                        label="CSS Filters"
+                        checked={isFilterCss}
+                        onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "isFilterCss") })}
+                      >
+                      </ToggleControl>
 
-                </> : ""
-              }
-            </div></> :
+                    </> : ""
+                }
+              </div></> :
             <>
               {/* Hover  Background */}
               <Background label={__('Hover Background Color', 'container-block')} value={hoverBg} onChange={val => {
@@ -179,101 +179,101 @@ const StyleSetting = ({ attributes, setAttributes }) => {
                       {
                         overlyStyleButton === "normal" ?
                           <>{/* Overly background */}
-                          <Background label={__('Overly Color', 'container-block')} value={oHoverBg} onChange={val => {
-                            const newBg = produce(overlyBackground, draft => {
-                              draft.oHoverBg = val
-                            })
-                            setAttributes({ overlyBackground: newBg })
-                          }} defaults={{ color: '#000' }} />
-
-                          {/* Opacity */}
-                          <RangeControl
-                            label="Opacity"
-                            value={hoverOpacity}
-                            onChange={val => {
-                              const newOpacity = produce(overlyBackground, draft => {
-                                draft.hoverOpacity = val
+                            <Background label={__('Overly Color', 'container-block')} value={oHoverBg} onChange={val => {
+                              const newBg = produce(overlyBackground, draft => {
+                                draft.oHoverBg = val
                               })
-                              setAttributes({ overlyBackground: newOpacity })
-                            }}
-                            step={0.1}
-                          ></RangeControl>
+                              setAttributes({ overlyBackground: newBg })
+                            }} defaults={{ color: '#000' }} />
 
-                          <SelectControl
-                            label={__("Blend Mode", "container-block")}
-                            value={blendType}
-                            options={[
-                              { value: 'normal', label: 'Normal' },
-                              { value: 'multiply', label: 'Multiply' },
-                              { value: 'screen', label: 'Screen' },
-                              { value: 'overly', label: 'Overly' },
-                              { value: 'darken', label: 'Darken' },
-                              { value: 'lighten', label: 'Lighten' },
-                              { value: 'color dodge', label: 'Color Dodge' },
-                              { value: 'saturation', label: 'Saturation' },
-                              { value: 'color', label: 'Color' },
-                              { value: 'luminosity', label: 'Luminosity' }
-                            ]}
-                            onChange={(val) => {
-                              setAttributes({ blendType: val })
-                            }}
-                          >
+                            {/* Opacity */}
+                            <RangeControl
+                              label="Opacity"
+                              value={hoverOpacity}
+                              onChange={val => {
+                                const newOpacity = produce(overlyBackground, draft => {
+                                  draft.hoverOpacity = val
+                                })
+                                setAttributes({ overlyBackground: newOpacity })
+                              }}
+                              step={0.1}
+                            ></RangeControl>
+
+                            <SelectControl
+                              label={__("Blend Mode", "container-block")}
+                              value={blendType}
+                              options={[
+                                { value: 'normal', label: 'Normal' },
+                                { value: 'multiply', label: 'Multiply' },
+                                { value: 'screen', label: 'Screen' },
+                                { value: 'overly', label: 'Overly' },
+                                { value: 'darken', label: 'Darken' },
+                                { value: 'lighten', label: 'Lighten' },
+                                { value: 'color dodge', label: 'Color Dodge' },
+                                { value: 'saturation', label: 'Saturation' },
+                                { value: 'color', label: 'Color' },
+                                { value: 'luminosity', label: 'Luminosity' }
+                              ]}
+                              onChange={(val) => {
+                                setAttributes({ blendType: val })
+                              }}
+                            >
                             </SelectControl></> :
                           <>{/* Overly background */}
-                          <Background label={__('Overly Color', 'container-block')} value={oHoverBg} onChange={val => {
-                            const newBg = produce(overlyBackground, draft => {
-                              draft.oHoverBg = val
-                            })
-                            setAttributes({ overlyBackground: newBg })
-                          }} defaults={{ color: '#000' }} />
-
-                          {/* Opacity */}
-                          <RangeControl
-                            label="Opacity"
-                            value={hoverOpacity}
-                            onChange={val => {
-                              const newOpacity = produce(overlyBackground, draft => {
-                                draft.hoverOpacity = val
+                            <Background label={__('Overly Color', 'container-block')} value={oHoverBg} onChange={val => {
+                              const newBg = produce(overlyBackground, draft => {
+                                draft.oHoverBg = val
                               })
-                              setAttributes({ overlyBackground: newOpacity })
-                            }}
-                            step={0.1}
-                          ></RangeControl>
+                              setAttributes({ overlyBackground: newBg })
+                            }} defaults={{ color: '#000' }} />
 
-                          {/* Transition */}
-                          <RangeControl
-                            label="Opacity Transition"
-                            value={hoverTransition}
-                            onChange={val => {
-                              const newOpacity = produce(overlyBackground, draft => {
-                                draft.hoverTransition = val
-                              })
-                              setAttributes({ overlyBackground: newOpacity })
-                            }}
-                            step={0.1}
-                          ></RangeControl>
+                            {/* Opacity */}
+                            <RangeControl
+                              label="Opacity"
+                              value={hoverOpacity}
+                              onChange={val => {
+                                const newOpacity = produce(overlyBackground, draft => {
+                                  draft.hoverOpacity = val
+                                })
+                                setAttributes({ overlyBackground: newOpacity })
+                              }}
+                              step={0.1}
+                            ></RangeControl>
+
+                            {/* Transition */}
+                            <RangeControl
+                              label="Opacity Transition"
+                              value={hoverTransition}
+                              onChange={val => {
+                                const newOpacity = produce(overlyBackground, draft => {
+                                  draft.hoverTransition = val
+                                })
+                                setAttributes({ overlyBackground: newOpacity })
+                              }}
+                              step={0.1}
+                            ></RangeControl>
 
 
-                          <SelectControl
-                            label={__("Blend Mode", "container-block")}
-                            value={blendType}
-                            options={[
-                              { value: 'normal', label: 'Normal' },
-                              { value: 'multiply', label: 'Multiply' },
-                              { value: 'screen', label: 'Screen' },
-                              { value: 'overly', label: 'Overly' },
-                              { value: 'darken', label: 'Darken' },
-                              { value: 'lighten', label: 'Lighten' },
-                              { value: 'color dodge', label: 'Color Dodge' },
-                              { value: 'saturation', label: 'Saturation' },
-                              { value: 'color', label: 'Color' },
-                              { value: 'luminosity', label: 'Luminosity' }
-                            ]}
-                            onChange={(val) => {
-                              setAttributes({ blendType: val })
-                            }}
-                          >
-                          </SelectControl></>
+                            <SelectControl
+                              label={__("Blend Mode", "container-block")}
+                              value={blendType}
+                              options={[
+                                { value: 'normal', label: 'Normal' },
+                                { value: 'multiply', label: 'Multiply' },
+                                { value: 'screen', label: 'Screen' },
+                                { value: 'overly', label: 'Overly' },
+                                { value: 'darken', label: 'Darken' },
+                                { value: 'lighten', label: 'Lighten' },
+                                { value: 'color dodge', label: 'Color Dodge' },
+                                { value: 'saturation', label: 'Saturation' },
+                                { value: 'color', label: 'Color' },
+                                { value: 'luminosity', label: 'Luminosity' }
+                              ]}
+                              onChange={(val) => {
+                                setAttributes({ blendType: val })
+                              }}
+                            >
+                            </SelectControl></>
                       }
 
                       <ToggleControl
@@ -300,7 +300,7 @@ const StyleSetting = ({ attributes, setAttributes }) => {
             }
           </div>
         </div>
-      
+
 
         {/* Border Control */}
         <BorderControl label={__('Border:', 'text-domain')} value={border} onChange={val => setAttributes({ innerBlockStyles: updateData(innerBlockStyles, val, "border") })} defaults={{ radius: '5px' }} />

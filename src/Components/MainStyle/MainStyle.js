@@ -7,7 +7,7 @@ const MainStyle = ({ attributes }) => {
 
   const { oNormalBg, oHoverBg, normalOpacity, hoverOpacity, hoverTransition, isOverly, } = overlyBackground;
   const { isHeight, contentAlign, contentColor, contentTypo } = innerBlockStyles;
-  const { flip, isShaped } = shaped;
+  const { flip, isShaped, bottomColors, topColors } = shaped;
   const { isTopFlip, isBottomFlip } = flip;
   const { bottomUploadShaped } = isShaped;
 
@@ -83,14 +83,24 @@ const MainStyle = ({ attributes }) => {
         ${topShaped} svg{
         width: ${shapedColumns.topWidth.desktop};
         height: ${shapedColumns.topHeight.desktop};
+        color:${topColors};
+        fill:${topColors};
         ${isTopFlip === true && `
           transform: translateX(0%) rotateY(180deg);
         `}
       }
 
+      ${topShaped} svg path{
+        color:${topColors};
+        fill:${topColors};
+      }
+
       ${bottomShaped} svg{
         width: ${shapedColumns.bottomWidth.desktop};
         height: ${shapedColumns.bottomHeight.desktop};
+        color:${bottomColors};
+        fill:${bottomColors};
+
         ${isBottomFlip === true && `
           transform: translateX(0%) rotateX(180deg);
         `};
@@ -100,6 +110,10 @@ const MainStyle = ({ attributes }) => {
         ${bottomUploadShaped === true && `
           transform: none;
         `}
+      }
+      ${bottomShaped} svg path{
+        color:${bottomColors};
+        fill:${bottomColors};
       }
 
         @media only screen and (max-width:640px){
